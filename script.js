@@ -24,18 +24,26 @@ buttonYes.addEventListener('click', () => {
   document.querySelector('#message').style.display = 'flex'
 })
 document.addEventListener("DOMContentLoaded", () => {
-  const audio = document.getElementById("background-music");
+    const audio = document.getElementById("background-music");
 
-  // Intenta reproducir el audio automáticamente
-  const playAudio = () => {
-      audio.play().catch(() => {
-          console.log("El navegador bloqueó la reproducción automática.");
-      });
-  };
+    // Función para intentar reproducir el audio
+    const playAudio = () => {
+        audio.play().catch(() => {
+            console.log("El navegador bloqueó la reproducción automática.");
+        });
+    };
 
-  
-  document.addEventListener("click", playAudio, { once: true });
+    // Detectar interacción del usuario para iniciar el audio en móviles y PC
+    const enableAudio = () => {
+        playAudio();
+        document.removeEventListener("click", enableAudio);
+        document.removeEventListener("touchstart", enableAudio);
+    };
 
+    // Intentar reproducir automáticamente
+    playAudio();
 
-  playAudio();
+    // Si es bloqueado, esperar interacción del usuario
+    document.addEventListener("click", enableAudio, { once: true });
+    document.addEventListener("touchstart", enableAudio, { once: true });
 });
